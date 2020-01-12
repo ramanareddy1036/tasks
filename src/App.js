@@ -1,26 +1,34 @@
 import React from 'react';
-import logo from './logo.svg';
+import LoginPage from './loginPge/loginPage';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import EmployeeList from './EmployeeList/employeeList';
+import { connect } from 'react-redux';
 import './App.css';
 
-function App() {
+function App(props) {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        {/* Route for showing Login or EmployeeList */}
+        <Switch>
+          <Route path="/login" component={LoginPage} />
+          <Route exact path="/details" render={() => (
+            props.loggedIn ? (<Route component={EmployeeList} />)
+              : (<Route>
+                <Redirect to="/login"></Redirect>
+              </Route>)
+          )} />
+          <Route path="/"> <Redirect to="/login"></Redirect></Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 
-export default App;
+// get the cuurent state for check userLogged in or not
+function mapState(state) {
+  return state;
+}
+
+
+export default connect(mapState)(App);
